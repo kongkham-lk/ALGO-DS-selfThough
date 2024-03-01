@@ -4,15 +4,17 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        Dictionary<string, List<string>> graph1 = new(); // graph with no cycle
-        graph1.Add("f", new List<string> { "g", "i" });
-        graph1.Add("g", new List<string> { "h" });
-        graph1.Add("h", new List<string> { });
-        graph1.Add("i", new List<string> { "g", "k" });
-        graph1.Add("j", new List<string> { "i" });
-        graph1.Add("k", new List<string> { });
+        Dictionary<string, List<string>> graph1 = new() // directed graph with no cycle
+        {
+            { "f", new List<string> { "g", "i" } },
+            { "g", new List<string> { "h" } },
+            { "h", new List<string> { } },
+            { "i", new List<string> { "g", "k" } },
+            { "j", new List<string> { "i" } },
+            { "k", new List<string> { } },
+        }; 
 
-        List<string[]> edges = new()
+        List<string[]> edges = new() // represent undirected graph
         {
             new string[] { "i", "j" },
             new string[] { "i", "k" },
@@ -23,10 +25,6 @@ public class Program
         };
 
         // add memo for visited node
-        Dictionary<string, bool> visited = new();
-        foreach (var node in graph1)
-            visited.Add(node.Key, false);
-
         List<string> memo = new();
 
         Console.WriteLine(HasPath_DFS(graph1, "f", "k", memo)); // true
@@ -42,7 +40,7 @@ public class Program
         memo = new();
 
         Console.WriteLine(HasPath_BFS(graph1, "j", "f", memo)); // true
-
+                
         Dictionary<string, List<string>> graph2 = BuildGraph(edges);
 
         memo = new();
@@ -62,6 +60,11 @@ public class Program
         Console.WriteLine(HasPath_BFS(graph2, "k", "o", memo)); // false
     }
 
+    /// <summary>
+    /// convert undirected graph to directed graph
+    /// </summary>
+    /// <param name="edges"></param>
+    /// <returns></returns>
     private static Dictionary<string, List<string>> BuildGraph(List<string[]> edges)
     {
         Dictionary<string, List<string>> graph = new();
@@ -80,6 +83,14 @@ public class Program
         return graph;
     }
 
+    /// <summary>
+    /// search target node with depth first search
+    /// </summary>
+    /// <param name="graph"></param>
+    /// <param name="src"></param>
+    /// <param name="target"></param>
+    /// <param name="visited"></param>
+    /// <returns></returns>
     public static bool HasPath_DFS(Dictionary<string, List<string>> graph, string src, string target,  List<string> visited)
     {
         if (src.Equals(target))
@@ -102,6 +113,14 @@ public class Program
         return false;
     }
 
+    /// <summary>
+    /// search target node with breath first search
+    /// </summary>
+    /// <param name="graph"></param>
+    /// <param name="src"></param>
+    /// <param name="target"></param>
+    /// <param name="visited"></param>
+    /// <returns></returns>
     public static bool HasPath_BFS(Dictionary<string, List<string>> graph, string src, string target, List<string> visited)
     {
         if (src.Equals(target))
@@ -135,11 +154,5 @@ public class Program
         }
 
         return false;
-    }
-
-    private static void Reset(Dictionary<string, List<string>> graph, ref Dictionary<string, bool> visited)
-    {
-        foreach (var node in graph)
-            visited[node.Key] = false;
     }
 }
