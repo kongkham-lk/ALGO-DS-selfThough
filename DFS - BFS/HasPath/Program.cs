@@ -1,23 +1,26 @@
-﻿public class Program
+﻿using System.Security.Cryptography.X509Certificates;
+
+public class Program
 {
     public static void Main(string[] args)
     {
-        Dictionary<string, string[]> graph1 = new(); // graph with no cycle
-        graph1.Add("f", new string[] { "g", "i" });
-        graph1.Add("g", new string[] { "h" });
-        graph1.Add("h", new string[] { });
-        graph1.Add("i", new string[] { "g", "k" });
-        graph1.Add("j", new string[] { "i" });
-        graph1.Add("k", new string[] { });
+        Dictionary<string, List<string>> graph1 = new(); // graph with no cycle
+        graph1.Add("f", new List<string> { "g", "i" });
+        graph1.Add("g", new List<string> { "h" });
+        graph1.Add("h", new List<string> { });
+        graph1.Add("i", new List<string> { "g", "k" });
+        graph1.Add("j", new List<string> { "i" });
+        graph1.Add("k", new List<string> { });
 
-        Dictionary<string, string[]> graph2 = new(); // graph with cycle
-        graph2.Add("i", new string[] { "j", "k" });
-        graph2.Add("j", new string[] { "i", "k" });
-        graph2.Add("k", new string[] { "i", "j", "m", "l" });
-        graph2.Add("l", new string[] { "k" });
-        graph2.Add("m", new string[] { "k" });
-        graph2.Add("n", new string[] { "o" });
-        graph2.Add("o", new string[] { "n" });
+        List<string[]> edges = new()
+        {
+            new string[] { "i", "j" },
+            new string[] { "i", "k" },
+            new string[] { "j", "k" },
+            new string[] { "k", "m" },
+            new string[] { "k", "l" },
+            new string[] { "o", "n" },
+        };
 
         // add memo for visited node
         Dictionary<string, bool> visited = new();
@@ -38,6 +41,7 @@
 
         Console.WriteLine(HasPath_BFS(graph1, "j", "f", ref visited)); // true
 
+        Dictionary<string, List<string>> graph2 = BuildGraph(edges);
         visited = new();
 
         foreach (var node in graph2)
@@ -48,7 +52,7 @@
         Reset(graph2, ref visited);
 
         Console.WriteLine(HasPath_BFS(graph2, "k", "m", ref visited)); // true
-        
+
         Reset(graph2, ref visited);
 
         Console.WriteLine(HasPath_DFS(graph2, "k", "o", ref visited)); // false
@@ -58,7 +62,25 @@
         Console.WriteLine(HasPath_BFS(graph2, "k", "o", ref visited)); // false
     }
 
-    public static bool HasPath_DFS(Dictionary<string, string[]> graph, string src, string target, ref Dictionary<string, bool> visited)
+    private static Dictionary<string, List<string>> BuildGraph(List<string[]> edges)
+    {
+        Dictionary<string, List<string>> graph = new();
+
+        foreach (string[] edge in edges)
+        {
+            if (!graph.Keys.Contains(edge[0]))
+                graph.Add(edge[0], new List<string>());
+            if (!graph.Keys.Contains(edge[1]))
+                graph.Add(edge[1], new List<string>());
+
+            graph[edge[0]].Add(edge[1]);
+            graph[edge[1]].Add(edge[0]);
+        }
+
+        return graph;
+    }
+
+    public static bool HasPath_DFS(Dictionary<string, List<string>> graph, string src, string target, ref Dictionary<string, bool> visited)
     {
         if (src.Equals(target))
             return true;
@@ -80,7 +102,7 @@
         return false;
     }
 
-    public static bool HasPath_BFS(Dictionary<string, string[]> graph, string src, string target, ref Dictionary<string, bool> visited)
+    public static bool HasPath_BFS(Dictionary<string, List<string>> graph, string src, string target, ref Dictionary<string, bool> visited)
     {
         if (src.Equals(target))
             return true;
@@ -115,7 +137,7 @@
         return false;
     }
 
-    private static void Reset(Dictionary<string, string[]> graph, ref Dictionary<string, bool> visited)
+    private static void Reset(Dictionary<string, List<string>> graph, ref Dictionary<string, bool> visited)
     {
         foreach (var node in graph)
             visited[node.Key] = false;
