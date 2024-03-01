@@ -27,39 +27,39 @@ public class Program
         foreach (var node in graph1)
             visited.Add(node.Key, false);
 
-        Console.WriteLine(HasPath_DFS(graph1, "f", "k", ref visited)); // true
+        List<string> memo = new();
 
-        Reset(graph1, ref visited);
+        Console.WriteLine(HasPath_DFS(graph1, "f", "k", memo)); // true
 
-        Console.WriteLine(HasPath_BFS(graph1, "f", "k", ref visited)); // true
+        memo = new();
 
-        Reset(graph1, ref visited);
+        Console.WriteLine(HasPath_BFS(graph1, "f", "k", memo)); // true
 
-        Console.WriteLine(HasPath_DFS(graph1, "j", "f", ref visited)); // false
+        memo = new();
 
-        Reset(graph1, ref visited);
+        Console.WriteLine(HasPath_DFS(graph1, "j", "f", memo)); // false
 
-        Console.WriteLine(HasPath_BFS(graph1, "j", "f", ref visited)); // true
+        memo = new();
+
+        Console.WriteLine(HasPath_BFS(graph1, "j", "f", memo)); // true
 
         Dictionary<string, List<string>> graph2 = BuildGraph(edges);
-        visited = new();
 
-        foreach (var node in graph2)
-            visited.Add(node.Key, false);
+        memo = new();
 
-        Console.WriteLine(HasPath_DFS(graph2, "k", "m", ref visited)); // true
+        Console.WriteLine(HasPath_DFS(graph2, "k", "m", memo)); // true
 
-        Reset(graph2, ref visited);
+        memo = new();
 
-        Console.WriteLine(HasPath_BFS(graph2, "k", "m", ref visited)); // true
+        Console.WriteLine(HasPath_BFS(graph2, "k", "m", memo)); // true
 
-        Reset(graph2, ref visited);
+        memo = new();
 
-        Console.WriteLine(HasPath_DFS(graph2, "k", "o", ref visited)); // false
+        Console.WriteLine(HasPath_DFS(graph2, "k", "o", memo)); // false
 
-        Reset(graph2, ref visited);
+        memo = new();
 
-        Console.WriteLine(HasPath_BFS(graph2, "k", "o", ref visited)); // false
+        Console.WriteLine(HasPath_BFS(graph2, "k", "o", memo)); // false
     }
 
     private static Dictionary<string, List<string>> BuildGraph(List<string[]> edges)
@@ -80,21 +80,21 @@ public class Program
         return graph;
     }
 
-    public static bool HasPath_DFS(Dictionary<string, List<string>> graph, string src, string target, ref Dictionary<string, bool> visited)
+    public static bool HasPath_DFS(Dictionary<string, List<string>> graph, string src, string target,  List<string> visited)
     {
         if (src.Equals(target))
             return true;
 
-        visited[src] = true;
+        visited.Add(src);
 
         if (!graph[src].Any())
             return false;
         else
             foreach (string next in graph[src])
             {
-                if (!visited[next] && HasPath_DFS(graph, next, target, ref visited)) // skip all the visited node
+                if (!visited.Contains(next) && HasPath_DFS(graph, next, target, visited)) // skip all the visited node
                 {
-                    visited[next] = true;
+                    visited.Add(next);
                     return true;
                 }
             }
@@ -102,12 +102,10 @@ public class Program
         return false;
     }
 
-    public static bool HasPath_BFS(Dictionary<string, List<string>> graph, string src, string target, ref Dictionary<string, bool> visited)
+    public static bool HasPath_BFS(Dictionary<string, List<string>> graph, string src, string target, List<string> visited)
     {
         if (src.Equals(target))
             return true;
-
-        visited[src] = true;
 
         Queue<string> queue = new();
 
@@ -117,14 +115,16 @@ public class Program
         {
             string temp = queue.Dequeue();
 
+            visited.Add(temp);
+
             if (!graph[temp].Any())
                 return false;
             else
                 foreach (string next in graph[temp])
                 {
-                    if (!visited[next]) // skip all the visited node
+                    if (!visited.Contains(next)) // skip all the visited node
                     {
-                        visited[next] = true;
+                        visited.Add(next);
 
                         if (target.Equals(next))
                             return true;
