@@ -76,7 +76,6 @@ public class Program
 	{
 		List<int> visited = new List<int>();
 		int counter = 0;
-		var src = graph.First().Key;
 
 		foreach(var node in graph)
 		{
