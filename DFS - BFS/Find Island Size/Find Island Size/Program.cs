@@ -35,8 +35,11 @@ public class Program
                 {
                     int newSize = FoundIsland(grid, row, col, visited);
 
-                    minSize = Math.Min(minSize, newSize);
-                    maxSize = Math.Max(maxSize, newSize);
+                    if (newSize > 0) // land's size must greater than 0
+                    {
+                        minSize = Math.Min(minSize, newSize);
+                        maxSize = Math.Max(maxSize, newSize);
+                    }
                 }
             }
         }
