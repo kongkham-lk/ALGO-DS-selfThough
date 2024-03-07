@@ -43,11 +43,11 @@ public class Program
 
     public static void Explore(TreeNode root, IList<int> nodes)
     {
-        if (root == null)
-            return;
-
-        Explore(root.left, nodes);
-        nodes.Add(root.val);
-        Explore(root.right, nodes);
+        if (root != null)
+        {
+            Explore(root.left, nodes);
+            nodes.Add(root.val);
+            Explore(root.right, nodes);
+        }
     }
 }
