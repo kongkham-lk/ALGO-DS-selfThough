@@ -35,28 +35,19 @@ public class Program
     public static IList<int> InorderTraversal(TreeNode root)
     {
         IList<int> nodes = new List<int>();
-        IList<int> temp;
 
-        if (root == null)
-            return nodes;
-
-        temp = InorderTraversal(root.left);
-        if (temp.Any())
-        {
-            foreach (var n in temp)
-                nodes.Add(n);
-            temp.Clear();
-        }
-
-        nodes.Add(root.val);
-
-        temp = InorderTraversal(root.right);
-        if (temp.Any())
-        {
-            foreach (var n in temp)
-                nodes.Add(n);
-        }
+        Explore(root, nodes);
 
         return nodes;
+    }
+
+    public static void Explore(TreeNode root, IList<int> nodes)
+    {
+        if (root == null)
+            return;
+
+        Explore(root.left, nodes);
+        nodes.Add(root.val);
+        Explore(root.right, nodes);
     }
 }
