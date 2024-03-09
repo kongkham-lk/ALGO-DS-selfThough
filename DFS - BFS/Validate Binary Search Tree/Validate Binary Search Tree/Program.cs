@@ -4,7 +4,7 @@
     {
         TreeNode root = new() // given [5,1,4,null,null,3,6]
         {
-            val = 5,
+            val = 0,
             left = new() 
             { 
                 val = 1,
@@ -23,8 +23,6 @@
                 right = new() 
                 { 
                     val = 6,
-                    left = null,
-                    right = null
                 }
             }
         };
@@ -32,36 +30,23 @@
         Console.WriteLine(IsValidBST(root));
     }
 
+    public static long min = Int64.MinValue;
+
+    // use tabulation technique
     public static bool IsValidBST(TreeNode root)
     {
         if (root == null)
             return true;
 
-        if (root.left != null && root.left.val < root.val)
-            if (!Explore(root.left, root))
-                return false;
+        if (!IsValidBST(root.left))
+            return false;
 
-        if (root.right != null && root.right.val > root.val)
-            if (!Explore(root.right, root))
-                return false;
+        if (min >= root.val)
+            return false;
 
-        return true;
-    }
+        min = root.val;
 
-    public static bool Explore (TreeNode root, TreeNode rootOfParent)
-    {
-        if (root == null)
-            return true;
-
-        if (root.left != null && root.left.val < root.val)
-            if (!IsValidBST(root.left))
-                return false;
-
-        if (root.right != null && root.right.val > root.val)
-            if (!IsValidBST(root.right))
-                return false;
-
-        if (root.left != null && root.left.val >= root.val || root.right != null && root.right.val <= root.val)
+        if (!IsValidBST(root.right))
             return false;
 
         return true;
