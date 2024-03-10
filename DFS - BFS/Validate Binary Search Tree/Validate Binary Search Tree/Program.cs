@@ -38,15 +38,15 @@
         if (root == null)
             return true;
 
-        if (!IsValidBST(root.left))
+        if (!IsValidBST(root.left)) // dig down only the left branch until no sub left branch found
             return false;
 
-        if (min >= root.val)
+        if (min >= root.val) // compare if previous node less than current node
             return false;
 
-        min = root.val;
+        min = root.val; // assign the current node
 
-        if (!IsValidBST(root.right))
+        if (!IsValidBST(root.right)) // dig down only the right branch until no sub right branch found
             return false;
 
         return true;
