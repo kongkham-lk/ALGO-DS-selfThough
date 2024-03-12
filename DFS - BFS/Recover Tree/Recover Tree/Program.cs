@@ -8,23 +8,19 @@ public class Program
     {
         TreeNode root1 = new(1, new TreeNode(3, null, new TreeNode(2)), null); // given [1,3,null,null,2]
         TreeNode root2 = new(3, new TreeNode(1), new TreeNode(4, new TreeNode(2), null)); // given [3,1,4,null,null,2]
+        TreeNode root3 = new(5, new TreeNode(3, new TreeNode(-2147483648), new TreeNode(2)), new TreeNode(9)); // given [5,3,9,-2147483648,2]
 
-        TreeNode targetRoot = root2;
+        TreeNode targetRoot = root3;
 
-        Console.Write("[ ");
-        Console.Write(targetRoot.val + " ");
-        IterateThroughTree(targetRoot);
-        Console.WriteLine("]\n");
+        PrintTree(targetRoot);
 
         RecoverTree(targetRoot);
 
-        Console.Write("[ ");
-        Console.Write(targetRoot.val + " ");
-        IterateThroughTree(targetRoot);
-        Console.WriteLine("]");
+        PrintTree(targetRoot);
 
         // root1 => [3,1,null,null,2]
         // root2 => [2,1,4,null,null,3]
+        // root2 => [5,2,9,-2147483648,3]
     }
 
     public static TreeNode foundNode = null;
@@ -45,15 +41,13 @@ public class Program
 
         ExploreTree(curr.left);
 
-        if (pre.val >= curr.val)
+        if (pre.val > curr.val)
         {
-            if (foundNode == null && pre.val >= curr.val)
-                foundNode = pre; //2
-
+            if (foundNode == null)
+                foundNode = pre;
             foundNode2 = curr;
         }
-
-        pre = curr; //4
+        pre = curr;
 
         ExploreTree(curr.right);
     }
@@ -66,6 +60,14 @@ public class Program
     }
 
     public static List<string> memo = new();
+
+    public static void PrintTree(TreeNode targetRoot)
+    {
+        Console.Write("[ ");
+        Console.Write(targetRoot.val + " ");
+        IterateThroughTree(targetRoot);
+        Console.WriteLine("]\n");
+    }
 
     public static void IterateThroughTree(TreeNode root)
     {
