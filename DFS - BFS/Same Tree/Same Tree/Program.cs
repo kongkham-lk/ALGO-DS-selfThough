@@ -4,14 +4,23 @@
     {
         TreeNode p = new TreeNode(1, null, new TreeNode(1));
         TreeNode q = new TreeNode(1 , null, new TreeNode(1));
-        Console.WriteLine(IsSameTree(p, q));
+        TreeNode r = new TreeNode(1, new TreeNode(1), null);
+
+        IsSameTree(p, q); // True
+        IsSameTree(p, r); // False
     }
 
-    public static bool IsSameTree(TreeNode p, TreeNode q)
+    public static void IsSameTree(TreeNode p, TreeNode q)
+    {
+        Console.WriteLine(BruteForceCheck(p, q)); // Brute force
+        Console.WriteLine(RecursiveCheck(p, q)); // Optimized version
+    }
+
+    public static bool BruteForceCheck(TreeNode p, TreeNode q)
     {
         Queue<TreeNode> queue = new Queue<TreeNode>();
 
-        if (p == q) 
+        if (p == q)
             return true;
         else if (p != null && q == null || p == null && q != null)
             return false;
@@ -50,5 +59,15 @@
             }
         }
         return true;
+    }
+    
+    public static bool RecursiveCheck(TreeNode left, TreeNode right)
+    {
+        if (left == null || right == null)
+            return left?.val == right?.val;
+        if (left.val != right.val)
+            return false;
+
+        return RecursiveCheck(left.left, right.left) && RecursiveCheck(left.right, right.right);
     }
 }
