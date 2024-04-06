@@ -1,61 +1,52 @@
-﻿public class Solution
+﻿using System.Linq;
+
+public class Solution
 {
     public static void Main(string[] args)
     {
-        //Console.WriteLine("LongestPalindrome of babad: " + LongestPalindrome("babad") + "\n");
-        //Console.WriteLine("LongestPalindrome of cbbd: " + LongestPalindrome("cbbd") + "\n");
-        //Console.WriteLine("LongestPalindrome of aaaa: " + LongestPalindrome("aaaa") + "\n");
-        Console.WriteLine("LongestPalindrome of aacabdkacaa: " + LongestPalindrome("aacabdkacaa") + "\n");
+        string testStr1 = "babad";
+        string testStr2 = "cbbd";
+        string testStr3 = "bb";
+        string testStr4 = "aaaaa";
+        string testStr5 = "civilwartestingwhetherthatnaptionoranynartionsoconceivedandsodedicatedcanlongendureWeareqmetonagreatbattlefiemldoftzhatwarWehavecometodedicpateaportionofthatfieldasafinalrestingplaceforthosewhoheregavetheirlivesthatthatnationmightliveItisaltogetherfangandproperthatweshoulddothisButinalargersensewecannotdedicatewecannotconsecratewecannothallowthisgroundThebravelmenlivinganddeadwhostruggledherehaveconsecrateditfaraboveourpoorponwertoaddordetractTgheworldadswfilllittlenotlenorlongrememberwhatwesayherebutitcanneverforgetwhattheydidhereItisforusthelivingrathertobededicatedheretotheulnfinishedworkwhichtheywhofoughtherehavethusfarsonoblyadvancedItisratherforustobeherededicatedtothegreattdafskremainingbeforeusthatfromthesehonoreddeadwetakeincreaseddevotiontothatcauseforwhichtheygavethelastpfullmeasureofdevotionthatweherehighlyresolvethatthesedeadshallnothavediedinvainthatthisnationunsderGodshallhaveanewbirthoffreedomandthatgovernmentofthepeoplebythepeopleforthepeopleshallnotperishfromtheearth";
+        Console.WriteLine($"{testStr1}: {LongestPalindrome(testStr1)}\n");
+        Console.WriteLine($"{testStr2}: {LongestPalindrome(testStr2)}\n");
+        Console.WriteLine($"{testStr3}: {LongestPalindrome(testStr3)}\n");
+        Console.WriteLine($"{testStr4}: {LongestPalindrome(testStr4)}\n");
+        Console.WriteLine($"{testStr5}: {LongestPalindrome(testStr5)}\n");
     }
 
     public static string LongestPalindrome(string s)
     {
-        if (s.Length == 0)
+        if (s == null || s.Length == 0)
             return s;
 
-        var longestStr = s.Substring(0, 1);
+        string result = "";
 
-        int l = 0;
-        int r = s.Length - 1;
-
-        List<string> memo = new();
-
-        while (l < s.Length - 1 && r >= 0)
+        for (int i = 0; i < s.Length; i++)
         {
-            if (longestStr.Length < r - l + 1 && IsPalindrome(s.Substring(l, r - l + 1), ref memo))
-                longestStr = s.Substring(l, r - l + 1);
-            if (longestStr.Length < s.Length - l && IsPalindrome(s.Substring(l, s.Length - l), ref memo))
-                longestStr = s.Substring(l, s.Length - l);
-            if (longestStr.Length < r + 1 && IsPalindrome(s.Substring(0, r + 1), ref memo))
-                longestStr = s.Substring(0, r + 1);
+            int l = i;
+            int r = i;
 
-            l++;
-            r--;
+            result = IsPalindrome(s, result, l, r);
+
+            result = IsPalindrome(s, result, l, r + 1);
         }
 
-        return longestStr;
+        return result;
     }
 
-    public static bool IsPalindrome(string s, ref List<string> memo)
+    public static string IsPalindrome(string s, string result, int l, int r)
     {
-        if (memo.Contains(s))
-            return false;
-
-        if (s.Length <= 1)
-            return true;
-
-        if (s.Substring(0, 1).Equals(s.Substring(s.Length - 1, 1)))
+        while (l >= 0 && r < s.Length
+            && s.Substring(l, 1).Equals(s.Substring(r, 1)))
         {
-            if (IsPalindrome(s.Substring(1, s.Length - 1 - 1), ref memo))
-                return true;
-            else
-            {
-                if (!memo.Contains(s.Substring(1, s.Length - 1 - 1)))
-                    memo.Add(s.Substring(1, s.Length - 1 - 1));
-                return false;
-            }
+            if (result.Length < r - l + 1)
+                result = s.Substring(l, r - l + 1);
+            l -= 1;
+            r += 1;
         }
 
-        return false;
+        return result;
     }
 }
