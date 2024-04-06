@@ -22,31 +22,38 @@ public class Solution
             return s;
 
         string result = "";
+        List<string> memo = new List<string>();
 
         for (int i = 0; i < s.Length; i++)
         {
             int l = i;
             int r = i;
 
-            result = IsPalindrome(s, result, l, r);
+            IsPalindrome(s, ref result, l, r, ref memo);
 
-            result = IsPalindrome(s, result, l, r + 1);
+            IsPalindrome(s, ref result, l, r + 1, ref memo);
         }
 
         return result;
     }
 
-    public static string IsPalindrome(string s, string result, int l, int r)
+    public static bool IsPalindrome(string s, ref string result, int l, int r, ref List<string> memo)
     {
-        while (l >= 0 && r < s.Length
-            && s.Substring(l, 1).Equals(s.Substring(r, 1)))
+        if (!(l >= 0 && r < s.Length))
+            return false;
+        else if (memo.Contains(s.Substring(l, r - l + 1)))
+            return false;
+
+        if (s.Substring(l, 1).Equals(s.Substring(r, 1)))
         {
             if (result.Length < r - l + 1)
                 result = s.Substring(l, r - l + 1);
-            l -= 1;
-            r += 1;
+            if (IsPalindrome(s, ref result, l-1, r+1, ref memo))
+                return true;
         }
+        else if (!memo.Contains(s.Substring(l, r - l + 1)))
+            memo.Add(s.Substring(l, r - l + 1));
 
-        return result;
+        return false;
     }
 }
